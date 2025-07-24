@@ -1,0 +1,6 @@
+[auth]
+# Desactivar validación de email
+disable_email_validation = true
+
+# Permitir emails no verificados
+external_email_enabled = true

@@ -1,0 +1,1 @@
+export type SelectedValue = { id: number, name: string };
