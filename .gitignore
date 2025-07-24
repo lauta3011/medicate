@@ -17,7 +17,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
-
+.npmrc
 # Metro
 .metro-health-check*
 
@@ -31,9 +31,10 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+.env
 
 # typescript
 *.tsbuildinfo
 
+.vscode
 app-example

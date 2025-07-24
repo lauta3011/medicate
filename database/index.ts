@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import Constants from 'expo-constants';
 
-const supabaseUrl = 'https://rmmhfwtstrhaovyddxvn.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtbWhmd3RzdHJoYW92eWRkeHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwMDY4NDksImV4cCI6MjA2NDU4Mjg0OX0.YH1M27gWrdZflFSaWO_Or0Jfm1vKeObuwEHbPd-sK0A';
+const { supabaseUrl, supabaseKey } = Constants.expoConfig?.extra || {};
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
