@@ -21,7 +21,7 @@ export default function User() {
                 <ServicesList user={profile.id} />
             </ScrollView>
             <View className="py-2">
-                <Button title="agregar servicio" onPress={() => router.push('/services/new-service')}/>
+                <Button title="agregar servicio" onPress={() => router.push('./user/new-service')}/>
             </View>
         </SafeAreaView>  
     )

@@ -13,16 +13,17 @@ import {
     SelectTrigger,
 } from "../ui/select";
 
-export default function Selector({ value, placeholder, list, onChange }: any) {
+export default function Selector({ value, textColor, placeholder, list, onChange }: any) {
+    const color = textColor ?? 'text-slate-100';
     return (
         <View className="w-full">
-            <Select selectedValue={value} closeOnOverlayClick={true} onValueChange={(itemValue) => {
+            <Select defaultValue={placeholder} initialLabel={placeholder} selectedValue={value} className={`${color}`} closeOnOverlayClick={true} onValueChange={(itemValue) => {
                 const selected = list.find((item: any) => item.name === itemValue);
                 onChange(selected);
             }}>
-                <SelectTrigger className="flex justify-between px-3" variant="outline" size="xl">
-                    <SelectInput className="text-slate-100 font-light" placeholder={placeholder} />
-                    <SelectIcon className="text-slate-100 font-light"  as={ChevronDownIcon} />
+                <SelectTrigger className="flex justify-between px-3 border-slate-200" variant="outline" size="xl">
+                    <SelectInput className={`${color} font-light`}  />
+                    <SelectIcon className={`${color} font-light`}  as={ChevronDownIcon} />
                 </SelectTrigger>
                 <SelectPortal className="pb-8">
                     <SelectBackdrop />

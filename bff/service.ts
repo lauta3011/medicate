@@ -71,5 +71,24 @@ export const FetchServicesOffers = async ({ user }: any) => {
 }
 
 export async function SearchedServices({searched}: any) {
-    console.log(searched);
+    const { city, department, service } = searched;
+    console.log('bff', {city, department, service} )
+    const { data, error } = await supabase
+        .from('service_offer')
+        .select(`
+            title, 
+            description, 
+            image_path, 
+            department:department (id, name), 
+            city:city (id, name), 
+            service:service (id, name)
+          `)
+        .eq('city', city.id)
+        .eq('department', department.id)
+        .eq('service', service.id);
+    if (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
+    else return {data, error }
 } 

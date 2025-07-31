@@ -1,13 +1,15 @@
 import { fetchCities, fetchDepartment, fetchServices } from "@/bff/fetch";
-import BigButton from "@/components/common/search-button";
 import Selector from "@/components/common/selector";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
+import { useSearchedStore } from "@/store/searchedStore";
 import { SelectedValue } from "@/types";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { Pressable, SafeAreaView, Text, View } from "react-native";
 
-export default function MainView() {
+export default function FilterView() {
+    const { getSearchedServices } = useSearchedStore();
     const [services, setServices] = useState<object[]>();
     const [departments, setDepartments] = useState<object[]>();
     const [cities, setCities] = useState<object[]>();
@@ -16,6 +18,8 @@ export default function MainView() {
     const [selectedDepartment, setSelectedDepartment] = useState<SelectedValue>();
     const [selectedCity, setSelectedCity] = useState<SelectedValue | null>();
     
+    const router = useRouter();
+
     useEffect(() => {
         async function fetchInitialData() {
             const department: any = await fetchDepartment();
@@ -38,9 +42,13 @@ export default function MainView() {
         updateCities();
     }, [selectedDepartment])  
 
+    function updateSearchedServices () {
+        getSearchedServices({ city: selectedCity, department: selectedDepartment, service: selectedService })
+        router.push('/searched');
+    }
+
     return (
         <SafeAreaView className="flex-1 justify-between">
-
             <Center>
                 <Heading size="5xl" className="text-slate-50 mb-16">Bienvenido a <Text className="text-slate-300">Conectate</Text></Heading>
             </Center>
@@ -62,11 +70,15 @@ export default function MainView() {
                 </View> 
             }
 
-            <Center className="flex-1">
+            <Center className="gap-16 flex-1">
                 {selectedCity && selectedDepartment && selectedService && 
-                    <BigButton onPress={() => console.log('pasa algo ? ')} redirectTo={`/searched`} primary={true} label="buscar" />
+                    <Pressable className="bg-slate-50 w-full p-3 rounded-md" onPress={() => updateSearchedServices()}>
+                        <Text className="font-light text-3xl text-center text-slate-600">buscar</Text>
+                    </Pressable>
                 }
-                <BigButton primary={false} redirectTo={`/user/login`} label="ofrecer servicio" />
+                <Pressable onPress={() => router.push('./login')}>
+                    <Text className="font-light text-3xl text-slate-50">ofrecer servicio</Text>
+                </Pressable>
             </Center>
         </SafeAreaView>
     )

@@ -1,7 +1,11 @@
 import * as ImagePicker from 'expo-image-picker';
+import {
+  BookImage,
+  Camera
+} from "lucide-react-native";
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Image, StyleSheet, View } from 'react-native';
-
+import { Alert, Image, Pressable, Text, View } from 'react-native';
+import { Icon } from '../ui/icon';
 export default function ImageSelector({ handleImageChanged }: any) {
   const [image, setImage] = useState<string | null>(null);
 
@@ -48,32 +52,20 @@ export default function ImageSelector({ handleImageChanged }: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       {image && (
-        <Image source={{ uri: image }} style={styles.image} />
+        <Image source={{ uri: image }} className="w-[200] h-[200] my-7 rounded-xl" />
       )}
-      <View style={styles.buttonContainer}>
-        <Button title="Tomar foto" onPress={takePhoto} />
-        <Button title="Elegir de galería" onPress={pickImage} />
+      <View className="w-full flex-row justify-evenly">
+        <Pressable className="border-slate-100 border rounded-lg p-4 flex-row items-center" onPress={takePhoto}>
+          <Icon className="text-slate-100 mx-2" size='md' as={Camera} />
+          <Text className='text-slate-100 text-xl'>Tomar foto</Text>
+        </Pressable>
+        <Pressable className="border-slate-100 border rounded-lg p-4 flex-row items-center" onPress={pickImage}>
+          <Icon className='text-slate-100 mx-2' size='md' as={BookImage} />
+          <Text className='text-slate-100 text-xl'>Elegir de galeria</Text>
+        </Pressable>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  buttonContainer: {
-    gap: 10,
-    width: '100%',
-  },
-});

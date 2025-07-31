@@ -7,7 +7,6 @@ import ServiceCard from "./service-card";
 export default function ServicesList({ user }: any) {
     const { myServices, getServices } = useServiceStore();
     
-    console.log('## ', myServices)
     useEffect(() => {
         getServices(user)
     }, []);
