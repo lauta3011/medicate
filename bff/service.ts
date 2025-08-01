@@ -1,16 +1,17 @@
 import { supabase } from "@/database";
+import { decode } from 'base64-arraybuffer';
+import * as FileSystem from 'expo-file-system';
 
-export const PostService = async ({ service_offer }: any) => {
+export const PostService = async ({ service_offer, service_location }: any) => {
     try {
         const {
             user,
             title,
             description,
-            city,
-            department,
             service,
-            image
+            image,
         } = service_offer;
+
 
         const imagePath = await uploadImage(image, user);
         const { data, error } = await supabase
@@ -20,24 +21,45 @@ export const PostService = async ({ service_offer }: any) => {
                 description,
                 user,
                 image_path: imagePath.path,
-                city,
-                department,
-                service
+                service: service.id
             }).select();
 
         if (error) {
             throw error;
         }
 
-        return { data, error };
+        if (data) {
+            const { id } = data[0];
+            await addServiceLocation(service_location, id);
+        }
+
+        return { success: true, error: false };
     } catch (error) {
         console.log('error! ', error);
         throw { error: { msg: 'error en add service' } }
     }
 }
 
-import { decode } from 'base64-arraybuffer';
-import * as FileSystem from 'expo-file-system';
+async function addServiceLocation(service_location: any[], service: any) {    
+    try {
+        let locations: any[] = [];
+            
+        service_location.map((loc: any, index: number) => {
+            const { selectedCity } = loc;
+            locations.push({ city_id: selectedCity.id, service_id: service });
+        });
+
+        const { error } = await supabase
+        .from('service_location')
+        .insert(locations).select();
+
+        if (error) {
+            throw error;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
 
 async function uploadImage(imageUri: string, userId: string) {
   const fileExt = imageUri.split('.').pop()?.toLowerCase() || 'jpg';
@@ -60,7 +82,7 @@ async function uploadImage(imageUri: string, userId: string) {
 export const FetchServicesOffers = async ({ user }: any) => {
     const { data, error } = await supabase
         .from('service_offer')
-        .select('title, description, image_path, city (id, name), service (id, name)')
+        .select('title, description, image_path, service_location (service_id, city_id)')
         .eq('user', user);
 
     if (error) {

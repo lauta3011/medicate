@@ -12,7 +12,7 @@ export default function ServicesList({ user }: any) {
     }, []);
     
     return (
-        <View className="flex-1">
+        <View >
             {myServices.length > 0 && <>
                 {myServices.map((item: any, index: any) => {
                     return <ServiceCard key={index} offer={item}/>
