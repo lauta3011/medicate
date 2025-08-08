@@ -12,6 +12,7 @@ export const useNewServiceStore = create<any>((set, get) => ({
         service: null,
         locations: []
     },
+    isLoading: false,
     modal: false,
     addService: async () => {
         const service_offer = get().serviceForm;
@@ -38,7 +39,7 @@ export const useNewServiceStore = create<any>((set, get) => ({
                 set({ error: error instanceof Error ? error.message : 'Error desconocido', isLoading: false });
                 throw error;
             } finally {
-                set({ isLoading: false, error: null });
+                set({ isLoading: false });
             }
         }
     },

@@ -7,7 +7,7 @@ export default function AuthForm() {
     const [signUp, setSignUp] = useState(false);
 
     return (
-        <View className="mt-28">
+        <View className="flex-1 justify-center">
             {!signUp ? <LoginForm displaySignUp={() => setSignUp(true)} /> : <SignUpForm displaySignUp={() => setSignUp(false)} />}
         </View>
     )

@@ -1,4 +1,5 @@
 import { fetchCities, fetchDepartment, fetchServices } from "@/bff/fetch";
+import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import Selector from "@/components/common/selector";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
@@ -6,7 +7,7 @@ import { useSearchedStore } from "@/store/searchedStore";
 import { SelectedValue } from "@/types";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, SafeAreaView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function FilterView() {
     const { getSearchedServices } = useSearchedStore();
@@ -48,10 +49,13 @@ export default function FilterView() {
     }
 
     return (
-        <SafeAreaView className="flex-1 justify-between">
-            <Center>
-                <Heading size="5xl" className="text-slate-50 mb-16">Bienvenido a <Text className="text-slate-300">Conectate</Text></Heading>
-            </Center>
+        <SafeAreaWrapper className="flex-1 justify-between px-6">
+            {/* Header */}
+            <View className="mt-16 mb-8">
+                <Heading size="5xl" className="text-slate-50 mb-2">
+                    bienvenido a <Text className="text-slate-300">Conectate</Text>
+                </Heading>
+            </View>
 
             <View className="my-10 gap-3">
                 <Text className="font-light text-3xl text-slate-50">{"¿que servicio estas buscando?"}</Text>
@@ -80,6 +84,6 @@ export default function FilterView() {
                     <Text className="font-light text-3xl text-slate-50">ofrecer servicio</Text>
                 </Pressable>
             </Center>
-        </SafeAreaView>
+        </SafeAreaWrapper>
     )
 }

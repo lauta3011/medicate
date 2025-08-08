@@ -1,17 +1,28 @@
+import RoundedBackButton from "@/components/common/rounded-back-button";
+import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import ServiceBasicInfo from "@/components/common/service-basic-info";
 import LocationInfo from "@/components/common/service-location-info";
 import NewLocationModal from "@/components/modals/new-location-modal";
 import { Heading } from "@/components/ui/heading";
 import { useNewServiceStore } from "@/store/newServiceStore";
-import { Button, ScrollView, View } from "react-native";
+import { Button, ScrollView, Text, View } from "react-native";
 
 export default function NewService() {
     const { serviceForm, addService } = useNewServiceStore();
 
     return (
-        <View className="flex-1">
-            <Heading size="3xl" className="text-slate-50 mb-8">Nuevo servicio</Heading>
-            <ScrollView className="flex-grow">
+        <SafeAreaWrapper className="flex-1 px-6">
+            {/* Header with title and back button */}
+            <View className="flex-row items-center justify-between mt-16 mb-8">
+                <View className="flex-1 pr-4">
+                    <Heading size="5xl" className="text-slate-50 mb-2">
+                        Nuevo <Text className="text-slate-300">servicio</Text>
+                    </Heading>
+                </View>
+                <RoundedBackButton />
+            </View>
+            
+            <ScrollView className="flex-grow" showsVerticalScrollIndicator={false}>
                 <ServiceBasicInfo />
                 <LocationInfo />
             </ScrollView>
@@ -21,6 +32,6 @@ export default function NewService() {
             <View className="py-2">
                 <Button title="AGREGAR" onPress={() => addService()} />
             </View>
-        </View>
+        </SafeAreaWrapper>
     )
 }

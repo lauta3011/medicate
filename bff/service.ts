@@ -82,7 +82,7 @@ async function uploadImage(imageUri: string, userId: string) {
 export const FetchServicesOffers = async ({ user }: any) => {
     const { data, error } = await supabase
         .from('service_offer')
-        .select('title, description, image_path, service_location (service_id, city_id)')
+        .select('title, description, user, image_path, service (id, name), service_location (service_id, city_id)')
         .eq('user', user);
 
     if (error) {
@@ -93,24 +93,23 @@ export const FetchServicesOffers = async ({ user }: any) => {
 }
 
 export async function SearchedServices({searched}: any) {
-    const { city, department, service } = searched;
-    console.log('bff', {city, department, service} )
+    const { city, service } = searched;
+    
     const { data, error } = await supabase
         .from('service_offer')
         .select(`
-            title, 
-            description, 
-            image_path, 
-            department:department (id, name), 
-            city:city (id, name), 
-            service:service (id, name)
+            service,
+            title,
+            description,
+            image_path,
+            service (id, name),
+            service_location (service_id, city_id)
           `)
-        .eq('city', city.id)
-        .eq('department', department.id)
-        .eq('service', service.id);
+        .eq('service', service.id)
+        .eq('service_location.city_id', city.id)
     if (error) {
         console.error('Error fetching data:', error);
         throw error;
     }
-    else return {data, error }
+    else return { data, error }
 } 

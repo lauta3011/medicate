@@ -1,8 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 import { useState } from "react";
-import { Button, Pressable, Text } from "react-native";
-import { Card } from "../ui/card";
-import { Center } from "../ui/center";
+import { Pressable, Text, View } from "react-native";
 import { Input, InputField } from "../ui/input";
 
 export default function LoginForm({ displaySignUp }: any) {
@@ -15,35 +13,60 @@ export default function LoginForm({ displaySignUp }: any) {
             signIn(userName, userPassword );  
         }
     }
+    
     return (
-        <Card size="lg" variant="elevated" className="m-3 pt-8">
-            <Input
-            className="mb-3"
-            variant="outline"
-            size="lg"
-            isDisabled={false}
-            isInvalid={false}
-            isReadOnly={false}
-            >
-                <InputField onChangeText={(text: string) => setUserName(text)} placeholder="email" />
-            </Input>
+        <View className="w-full px-4">
+            <View className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
+                <Input
+                    className="mb-6"
+                    variant="outline"
+                    size="lg"
+                    isDisabled={false}
+                    isInvalid={false}
+                    isReadOnly={false}
+                >
+                    <InputField 
+                        onChangeText={(text: string) => setUserName(text)} 
+                        placeholder="email"
+                        placeholderTextColor="#94a3b8"
+                        className="text-slate-50 text-lg"
+                    />
+                </Input>
 
-            <Input
-            className="mb-3"
-            variant="outline"
-            size="lg"
-            isDisabled={false}
-            isInvalid={false}
-            isReadOnly={false}
-            >
-                <InputField  onChangeText={(text: string) => setUserPassword(text)} type="password" placeholder="contraseña" />
-            </Input>
+                <Input
+                    className="mb-8"
+                    variant="outline"
+                    size="lg"
+                    isDisabled={false}
+                    isInvalid={false}
+                    isReadOnly={false}
+                >
+                    <InputField  
+                        onChangeText={(text: string) => setUserPassword(text)} 
+                        type="password" 
+                        placeholder="contraseña"
+                        placeholderTextColor="#94a3b8"
+                        className="text-slate-50 text-lg"
+                    />
+                </Input>
 
-            <Button title="INGRESAR" onPress={() => handleLogin(userName!, userPassword!)} />
-            
-            <Center className="my-6">            
-                <Pressable onPress={() => displaySignUp()}><Text>crear una nueva cuenta</Text></Pressable>
-            </Center>
-        </Card>
+                <Pressable 
+                    className="bg-slate-50 py-5 rounded-xl mb-8 active:bg-slate-200"
+                    onPress={() => handleLogin(userName!, userPassword!)}
+                >
+                    <Text className="text-slate-800 text-center font-semibold text-xl">
+                        INGRESAR
+                    </Text>
+                </Pressable>
+                
+                <View className="items-center">            
+                    <Pressable onPress={() => displaySignUp()}>
+                        <Text className="text-slate-300 text-center text-lg">
+                            crear una nueva cuenta
+                        </Text>
+                    </Pressable>
+                </View>
+            </View>
+        </View>
     )
 }

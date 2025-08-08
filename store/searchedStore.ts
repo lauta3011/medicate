@@ -10,12 +10,13 @@ export const useSearchedStore = create<any>((set, get) => ({
     searched: { city: null, department: null, service: null },
     services: [ ],
     getSearchedServices: async (searched: any) => {
+        set({ isloading: true });
         const { data, error } = await SearchedServices({searched});
 
         if(error) {
             console.log('error ', error)
             throw error;
         }
-        set({ services: data, searched: { city: searched.city.name, department: searched.department.name, service: searched.service.name } });
+        set({ isloading: false, services: data, searched: { city: searched.city.name, department: searched.department.name, service: searched.service.name } });
     }
 }));
