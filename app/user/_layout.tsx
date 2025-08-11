@@ -13,6 +13,7 @@ export default function UserLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="new-service" />
+        <Stack.Screen name="edit-service" />
       </Stack>
     </AuthGuard>
   );

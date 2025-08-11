@@ -1,3 +1,4 @@
+import RoundedBackButton from "@/components/common/rounded-back-button";
 import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import ServicesList from "@/components/common/service-list";
 import { Heading } from "@/components/ui/heading";
@@ -12,10 +13,11 @@ export default function User() {
     return (
         <SafeAreaWrapper className="flex-1 px-6">
             {/* Header */}
-            <View className="mt-16 mb-8">
+            <View className="flex-row items-center justify-between mt-16 mb-8">
                 <Heading size="5xl" className="text-slate-50 mb-2">
                     {profile.name} <Text className="text-slate-300">{profile.last_name}</Text>
                 </Heading>
+                <RoundedBackButton />
             </View>
 
             <ScrollView className="flex-grow" showsVerticalScrollIndicator={false}>

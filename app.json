@@ -10,13 +10,17 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "statusBarHidden": true
+      "statusBarHidden": true,
+      "bundleIdentifier": "com.lauta3011.medicate",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.lauta3011.medicate",
+      "versionCode": 1,
       "statusBarHidden": true,
       "edgeToEdgeEnabled": true,
       "navigationBarColor": "transparent",
@@ -50,6 +54,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5b241f49-90dd-420c-a553-4dbbbff0ae9b"
+      }
+    },
+    "owner": "lauta3011"
   }
 }

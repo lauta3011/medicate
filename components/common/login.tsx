@@ -15,7 +15,7 @@ export default function LoginForm({ displaySignUp }: any) {
     }
     
     return (
-        <View className="w-full px-4">
+        <View className="w-full ">
             <View className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
                 <Input
                     className="mb-6"

@@ -53,7 +53,7 @@ export default function FilterView() {
             {/* Header */}
             <View className="mt-16 mb-8">
                 <Heading size="5xl" className="text-slate-50 mb-2">
-                    bienvenido a <Text className="text-slate-300">Conectate</Text>
+                    Bienvenido a <Text className="text-slate-300">Conectate</Text>
                 </Heading>
             </View>
 
