@@ -11,18 +11,38 @@ import {
 import { useNewServiceStore } from "@/store/newServiceStore"
 import { SelectedValue } from "@/types"
 import React, { useState } from "react"
-import { Text, View } from "react-native"
+import { Alert, Text, View } from "react-native"
 import ServiceLocation from "../common/select-service-location"
 import { Button, ButtonText } from "../ui/button"
 
 export default function NewLocationModal() {
-    const { addLocation, locationModal, modal: showModal } = useNewServiceStore();
+    const { addLocation, locationModal, modal: showModal, serviceForm } = useNewServiceStore();
     const [selectedDepartment, setSelectedDepartment] = useState<SelectedValue | null>(null);
     const [selectedCity, setSelectedCity] = useState<SelectedValue | null>(null);
     
     function handleAddLocation() {
-        addLocation({ selectedCity, selectedDepartment })
-        locationModal();
+        if (selectedCity && selectedDepartment) {
+            // Check for duplicates before adding
+            const existingLocations = serviceForm?.locations || [];
+            const isDuplicate = existingLocations.some((existing: any) => 
+                existing.selectedCity?.id === selectedCity.id
+            );
+            
+            if (isDuplicate) {
+                Alert.alert(
+                    "Ubicación duplicada",
+                    `Ya tienes registrada la ciudad ${selectedCity.name}. No puedes agregar la misma ubicación dos veces.`,
+                    [{ text: "Entendido", style: "default" }]
+                );
+                return;
+            }
+            
+            addLocation({ selectedCity, selectedDepartment });
+            // Reset form
+            setSelectedCity(null);
+            setSelectedDepartment(null);
+            locationModal();
+        }
     }
 
     return (

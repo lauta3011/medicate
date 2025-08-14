@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/authStore";
 import { useServiceStore } from "@/store/serviceStore";
 import Constants from 'expo-constants';
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { Edit, MessageCircle, Trash2, User } from "lucide-react-native";
 import { Alert, Image, Linking, Pressable, Text, View } from "react-native";
 import { Card } from "../ui/card";
@@ -10,15 +10,20 @@ import { Heading } from "../ui/heading";
 const { supabaseStorage } = Constants.expoConfig?.extra || {};
 
 export default function ServiceCard({ offer }: any) {
-    const { title, description, service, image_path, id, user_profile, user } = offer;
+    const { title, description, image_path, id, user: userProfile } = offer;
     const { profile, session } = useAuthStore();
     const { deleteService } = useServiceStore();
     const router = useRouter();
+    const pathname = usePathname();
 
-    console.log({user_profile, user});
-
-    // Check if this is the current user's service
-    const isOwnService = session && profile?.id === user;
+    // Check if we're on the user dashboard (user's own services)
+    const isUserDashboard = pathname === '/user' || pathname === '/user/index';
+    
+    // Show edit/delete buttons only on user dashboard
+    const showActionButtons = isUserDashboard;
+    
+    // Show WhatsApp button only when NOT on user dashboard (i.e., search results or other views)
+    const showWhatsApp = !isUserDashboard;
     
     const handleEdit = () => {
         router.push(`/user/edit-service?serviceId=${id}`);
@@ -50,9 +55,9 @@ export default function ServiceCard({ offer }: any) {
     };
 
     const handleWhatsAppContact = () => {
-        if (user_profile?.phone) {
-            const message = `Hola ${user_profile.name}, me interesa tu servicio: ${title}`;
-            const whatsappUrl = `whatsapp://send?phone=${user_profile.phone}&text=${encodeURIComponent(message)}`;
+        if (userProfile?.phone) {
+            const message = `Hola ${userProfile.name} te hablo desde Conectate por tu servicio de ${title}`;
+            const whatsappUrl = `whatsapp://send?phone=${userProfile.phone}&text=${encodeURIComponent(message)}`;
             
             Linking.canOpenURL(whatsappUrl).then(supported => {
                 if (supported) {
@@ -72,23 +77,12 @@ export default function ServiceCard({ offer }: any) {
             <View className="flex-row justify-between items-start mb-4">
                 <View className="flex-1 pr-4">
                     <Heading size="2xl" className="text-slate-800 mb-2">{title}</Heading>
-                    <View className="bg-blue-50 px-3 py-1 rounded-full self-start">
-                        <Text className="text-blue-600 font-semibold text-sm">{service?.name}</Text>
-                    </View>
                 </View>
                 
                 {/* Action Buttons */}
-                <View className="flex-row gap-2">
-                    {!isOwnService && user_profile && (
-                        <Pressable 
-                            onPress={handleWhatsAppContact}
-                            className="w-12 h-12 rounded-full bg-green-500 items-center justify-center active:bg-green-600 shadow-md"
-                        >
-                            <MessageCircle size={22} color="#ffffff" />
-                        </Pressable>
-                    )}
-                    
-                    {isOwnService && (
+                <View className="flex-row gap-2">                    
+                    {/* Edit/Delete buttons - only on user dashboard */}
+                    {showActionButtons && (
                         <>
                             <Pressable 
                                 onPress={handleEdit}
@@ -107,18 +101,31 @@ export default function ServiceCard({ offer }: any) {
                 </View>
             </View>
 
-            {/* Provider Information */}
-            {user_profile && (
-                <View className="bg-slate-50 p-4 rounded-lg mb-4">
+            {/* Provider Information - always visible */}
+            {userProfile && (
+                <View className="bg-gray-200 p-4 rounded-xl mb-4">
                     <View className="flex-row items-center">
-                        <View className="w-10 h-10 rounded-full bg-slate-200 items-center justify-center mr-3">
-                            <User size={20} color="#64748b" />
+                        <View className="w-12 h-12 rounded-full bg-slate-200 items-center justify-center mr-3 overflow-hidden">
+                            {userProfile.image_path ? (
+                                <Image 
+                                    source={{ uri: `${supabaseStorage}/profile-images/images/${userProfile.image_path}` }}
+                                    className="w-full h-full"
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <User size={20} color="#64748b" />
+                            )}
                         </View>
                         <View className="flex-1">
                             <Text className="text-slate-700 font-semibold text-lg">
-                                {user_profile.name} {user_profile.last_name}
+                                {userProfile.name} {userProfile.last_name}
                             </Text>
-                            <Text className="text-slate-500 text-sm">Proveedor del servicio</Text>
+                            <Text className="text-slate-600 text-sm">
+                                {userProfile.description && userProfile.description !== 'hardcoded aaaa' 
+                                    ? userProfile.description 
+                                    : 'Proveedor del servicio'
+                                }
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -138,6 +145,17 @@ export default function ServiceCard({ offer }: any) {
                         resizeMode="cover"
                     />
                 </View>
+            )}
+            
+            {/* WhatsApp Contact Button - only when NOT on user dashboard */}
+            {showWhatsApp && userProfile && (
+                <Pressable 
+                    onPress={handleWhatsAppContact}
+                    className="flex-row my-4 justify-center items-center bg-green-500 px-4 py-3 rounded-xl active:bg-green-800 shadow-md"
+                >
+                    <MessageCircle size={20} color="#ffffff" />
+                    <Text className="text-white font-semibold ml-2">Conectate!</Text>
+                </Pressable>
             )}
         </Card>
     )

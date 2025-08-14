@@ -13,7 +13,7 @@ interface EditServiceFormProps {
 }
 
 export default function EditServiceForm({ serviceData, onDataChange }: EditServiceFormProps) {
-    const { title, description, image, service, serviceForm } = useNewServiceStore();
+    const { title, description, image, service, serviceForm, setLocations } = useNewServiceStore();
     const [services, setServices] = useState<object[] | null>(null);
 
     useEffect(() => {
@@ -28,12 +28,40 @@ export default function EditServiceForm({ serviceData, onDataChange }: EditServi
     // Initialize form with existing data
     useEffect(() => {
         if (serviceData) {
+            // Set basic fields
             title(serviceData.title || '');
             description(serviceData.description || '');
-            service(serviceData.service || null);
-            image('existing'); // Mark as existing image
+            
+            // Set service - ensure we have the complete service object
+            if (serviceData.service) {
+                service(serviceData.service);
+            }
+            
+            // Set image - use existing image path
+            if (serviceData.image_path) {
+                image(serviceData.image_path); // Store the actual image path
+            } else {
+                image('existing'); // Fallback
+            }
+            
+            // Set locations - convert service_location data to the format expected by the form
+            if (serviceData.service_location && Array.isArray(serviceData.service_location)) {
+                const formattedLocations = serviceData.service_location.map((loc: any) => ({
+                    selectedCity: {
+                        id: loc.city?.id || loc.city_id,
+                        name: loc.city?.name || 'Ciudad desconocida'
+                    },
+                    selectedDepartment: {
+                        id: loc.city?.from_department?.id || '',
+                        name: loc.city?.from_department?.name || 'Departamento desconocido'
+                    }
+                }));
+                setLocations(formattedLocations);
+            } else {
+                setLocations([]);
+            }
         }
-    }, [serviceData]);
+    }, [serviceData, title, description, service, image, setLocations]);
 
     // Notify parent of data changes
     useEffect(() => {
@@ -41,10 +69,12 @@ export default function EditServiceForm({ serviceData, onDataChange }: EditServi
             title: serviceForm.title,
             description: serviceForm.description,
             service: serviceForm.service,
-            image: serviceForm.image
+            image: serviceForm.image,
+            locations: serviceForm.locations
         });
-    }, [serviceForm.title, serviceForm.description, serviceForm.service, serviceForm.image]);
+    }, [serviceForm.title, serviceForm.description, serviceForm.service, serviceForm.image, serviceForm.locations, onDataChange]);
 
+    console.log('image from form ', image)
     return (
         <View>
             <View className="my-4 gap-2">
@@ -82,7 +112,7 @@ export default function EditServiceForm({ serviceData, onDataChange }: EditServi
 
             <View className="my-4 gap-2">
                 <Text className="text-slate-50 text-2xl font-light">selecciona que tipo de servicio es el que ofreces</Text>
-                <Selector onChange={(val: SelectedValue) => service(val)} value={serviceForm.service} list={services} placeholder={"ofrezco servicios de ..."} />
+                <Selector onChange={(val: SelectedValue) => service(val)} value={serviceForm.service?.name} list={services} placeholder={"ofrezco servicios de ..."} />
             </View>
         </View>
     )

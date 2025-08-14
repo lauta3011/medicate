@@ -2,9 +2,11 @@ import AuthForm from "@/components/common/auth-form";
 import RoundedBackButton from "@/components/common/rounded-back-button";
 import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import { Heading } from "@/components/ui/heading";
+import { useRouter } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Login() {
+    const router = useRouter();
     return (
         <SafeAreaWrapper className="flex-1 ">
             {/* Header with title and back button */}
@@ -14,7 +16,7 @@ export default function Login() {
                         Ingresa a tu <Text className="text-slate-300">Cuenta</Text>
                     </Heading>
                 </View>
-                <RoundedBackButton />
+                <RoundedBackButton onPress={() => router.push('/')} />
             </View>
             <View className="flex-1 h-fit">
                 <AuthForm />

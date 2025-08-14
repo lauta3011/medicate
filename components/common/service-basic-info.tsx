@@ -33,7 +33,7 @@ export default function ServiceBasicInfo() {
                         isInvalid={false}
                         isReadOnly={false}
                     >
-                        <InputField onChangeText={(text: string) => title(text)} value={title} placeholder="titulo de la publicacion" />
+                        <InputField onChangeText={(text: string) => title(text)} value={serviceForm.title || ''} placeholder="titulo de la publicacion" />
                     </Input>
                 </View>
 
@@ -47,7 +47,7 @@ export default function ServiceBasicInfo() {
                         isInvalid={false}
                         isReadOnly={false}
                     >
-                        <InputField onChangeText={(text: string) => description(text)} value={description} placeholder="descripcion de lo que ofreces" />
+                        <InputField onChangeText={(text: string) => description(text)} value={serviceForm.description || ''} placeholder="descripcion de lo que ofreces" />
                     </Input>
                 </View>
 

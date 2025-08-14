@@ -3,11 +3,13 @@ import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import ServiceCard from "@/components/common/service-card";
 import { Heading } from "@/components/ui/heading";
 import { useSearchedStore } from "@/store/searchedStore";
+import { useRouter } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Searched() {
     const { searched, services } = useSearchedStore();
     const { city, service } = searched;
+    const router = useRouter();
     
     return (
         <SafeAreaWrapper className="flex-1 px-6">
@@ -18,7 +20,7 @@ export default function Searched() {
                         {service} en <Text className="text-slate-300">{city}</Text>
                     </Heading>
                 </View>
-                <RoundedBackButton />
+                <RoundedBackButton onPress={() => router.push('/')} />
             </View>
 
             {/* Services list */}

@@ -38,7 +38,7 @@ export default function EditService() {
                 setServiceData(service);
             } else {
                 console.warn('Service not found with ID:', serviceId);
-                console.warn('Available service IDs:', myServices.map(s => s.id));
+                console.warn('Available service IDs:', myServices.map((s: any) => s.id));
                 Alert.alert("Error", "Servicio no encontrado");
                 router.back();
             }
@@ -97,7 +97,7 @@ export default function EditService() {
                             {isLoading ? "Cargando..." : "Servicio no encontrado"}
                         </Heading>
                     </View>
-                    <RoundedBackButton />
+                    <RoundedBackButton onPress={() => router.push('/user')} />
                 </View>
             </SafeAreaWrapper>
         );

@@ -4,16 +4,15 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
 import { useAuthStore } from "@/store/authStore";
 import { Stack } from 'expo-router';
-import { useEffect } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
-    const { initializeAuth, isLoading } = useAuthStore();
+    const { isLoading } = useAuthStore();
 
-    useEffect(() => {
-        initializeAuth();
-    }, [initializeAuth]);
+    // useEffect(() => {
+    //     initializeAuth();
+    // }, [initializeAuth]);
 
     return (
       <SafeAreaProvider>

@@ -17,7 +17,7 @@ export default function Selector({ value, textColor, placeholder, list, onChange
     const color = textColor ?? 'text-slate-100';
     return (
         <View className="w-full">
-            <Select defaultValue={placeholder} initialLabel={placeholder} selectedValue={value} className={`${color}`} closeOnOverlayClick={true} onValueChange={(itemValue) => {
+            <Select defaultValue={value ?? placeholder} initialLabel={value ?? placeholder} selectedValue={value} className={`${color}`} closeOnOverlayClick={true} onValueChange={(itemValue) => {
                 const selected = list.find((item: any) => item.name === itemValue);
                 onChange(selected);
             }}>

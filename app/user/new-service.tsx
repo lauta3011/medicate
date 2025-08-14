@@ -5,10 +5,12 @@ import LocationInfo from "@/components/common/service-location-info";
 import NewLocationModal from "@/components/modals/new-location-modal";
 import { Heading } from "@/components/ui/heading";
 import { useNewServiceStore } from "@/store/newServiceStore";
+import { useRouter } from "expo-router";
 import { Button, ScrollView, Text, View } from "react-native";
 
 export default function NewService() {
     const { serviceForm, addService } = useNewServiceStore();
+    const router = useRouter();
 
     return (
         <SafeAreaWrapper className="flex-1 px-6">
@@ -19,7 +21,7 @@ export default function NewService() {
                         Nuevo <Text className="text-slate-300">servicio</Text>
                     </Heading>
                 </View>
-                <RoundedBackButton />
+                <RoundedBackButton onPress={() => router.push('/user')} />
             </View>
             
             <ScrollView className="flex-grow" showsVerticalScrollIndicator={false}>

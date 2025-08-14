@@ -6,8 +6,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, Pressable, Text, View } from 'react-native';
 import { Icon } from '../ui/icon';
-export default function ImageSelector({ handleImageChanged }: any) {
-  const [image, setImage] = useState<string | null>(null);
+
+export default function ImageSelector({ prevImage, handleImageChanged }: any) {
+  const [image, setImage] = useState<string | null>(prevImage ?? null);
 
   useEffect(() => {
     handleImageChanged(image)
@@ -51,10 +52,13 @@ export default function ImageSelector({ handleImageChanged }: any) {
     }
   };
 
+  console.log('prev ', prevImage)
+  console.log('image ', image)
+
   return (
     <View>
-      {image && (
-        <Image source={{ uri: image }} className="w-[200] h-[200] my-7 rounded-xl" />
+      {(image || prevImage) && (
+        <Image source={{ uri: prevImage ?? image }} className="w-[200] h-[200] my-7 rounded-xl" />
       )}
       <View className="w-full flex-row justify-evenly">
         <Pressable className="border-slate-100 border rounded-lg p-4 flex-row items-center" onPress={takePhoto}>
