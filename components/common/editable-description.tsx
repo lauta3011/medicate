@@ -30,8 +30,24 @@ export default function EditableDescription() {
 
     if (isEditing) {
         return (
-            <View className="my-8">
-                <Text className="text-slate-400 text-lg mb-2">Descripción</Text>
+            <View >
+                <View className="flex flex-row justify-between">
+                    <Text className="text-slate-400 text-lg mb-2">Descripción</Text>
+                    <View className="flex-row justify-end gap-2">
+                        <Pressable 
+                            onPress={handleCancel}
+                            className="w-10 h-10 rounded-full bg-slate-600 items-center justify-center active:bg-slate-500"
+                        >
+                            <X size={20} color="#f1f5f9" />
+                        </Pressable>
+                        <Pressable 
+                            onPress={handleSave}
+                            className="w-10 h-10 rounded-full bg-green-600 items-center justify-center active:bg-green-500"
+                        >
+                            <Check size={20} color="#f1f5f9" />
+                        </Pressable>
+                    </View>
+                </View>
                 <Input
                     variant="outline"
                     size="lg"
@@ -51,26 +67,12 @@ export default function EditableDescription() {
                         }}
                     />
                 </Input>
-                <View className="flex-row justify-end gap-2">
-                    <Pressable 
-                        onPress={handleCancel}
-                        className="w-10 h-10 rounded-full bg-slate-600 items-center justify-center active:bg-slate-500"
-                    >
-                        <X size={20} color="#f1f5f9" />
-                    </Pressable>
-                    <Pressable 
-                        onPress={handleSave}
-                        className="w-10 h-10 rounded-full bg-green-600 items-center justify-center active:bg-green-500"
-                    >
-                        <Check size={20} color="#f1f5f9" />
-                    </Pressable>
-                </View>
             </View>
         );
     }
 
     return (
-        <View className="my-8">
+        <View >
             <View className="flex-row items-center justify-between mb-2">
                 <Text className="text-slate-400 text-lg">Descripción</Text>
                 <Pressable 
@@ -84,7 +86,7 @@ export default function EditableDescription() {
             {showPlaceholder ? (
                 <Pressable 
                     onPress={handleEdit}
-                    className="bg-slate-700 rounded-lg p-4 border-2 border-dashed border-slate-500"
+                    className="rounded-lg p-4 border-2 border-dashed border-slate-500"
                 >
                     <Text className="text-slate-400 text-base italic">
                         Toca aquí para agregar una breve descripción de ti

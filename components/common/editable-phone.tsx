@@ -30,8 +30,24 @@ export default function EditablePhone() {
 
     if (isEditing) {
         return (
-            <View className="mb-6">
-                <Text className="text-slate-400 text-lg mb-2">Teléfono</Text>
+            <View>
+                <View className="flex flex-row justify-between">
+                    <Text className="text-slate-400 text-lg">Teléfono</Text>
+                    <View className="flex-row justify-end gap-2">
+                        <Pressable 
+                            onPress={handleCancel}
+                            className="w-10 h-10 rounded-full items-center justify-center active:bg-slate-500"
+                        >
+                            <X size={20} color="#f1f5f9" />
+                        </Pressable>
+                        <Pressable 
+                            onPress={handleSave}
+                            className="w-10 h-10 rounded-full bg-green-600 items-center justify-center active:bg-green-500"
+                        >
+                            <Check size={20} color="#f1f5f9" />
+                        </Pressable>
+                    </View>
+                </View>
                 <Input
                     variant="outline"
                     size="lg"
@@ -50,31 +66,17 @@ export default function EditablePhone() {
                         }}
                     />
                 </Input>
-                <View className="flex-row justify-end gap-2">
-                    <Pressable 
-                        onPress={handleCancel}
-                        className="w-10 h-10 rounded-full bg-slate-600 items-center justify-center active:bg-slate-500"
-                    >
-                        <X size={20} color="#f1f5f9" />
-                    </Pressable>
-                    <Pressable 
-                        onPress={handleSave}
-                        className="w-10 h-10 rounded-full bg-green-600 items-center justify-center active:bg-green-500"
-                    >
-                        <Check size={20} color="#f1f5f9" />
-                    </Pressable>
-                </View>
             </View>
         );
     }
 
     return (
-        <View className="mb-6">
-            <View className="flex-row items-center justify-between mb-2">
+        <View >
+            <View className="flex-row items-center justify-between ">
                 <Text className="text-slate-400 text-lg">Teléfono</Text>
                 <Pressable 
                     onPress={handleEdit}
-                    className="w-8 h-8 rounded-full bg-slate-600 items-center justify-center active:bg-slate-500"
+                    className="w-8 h-8 rounded-full items-center justify-center active:bg-slate-500"
                 >
                     <Edit3 size={16} color="#f1f5f9" />
                 </Pressable>

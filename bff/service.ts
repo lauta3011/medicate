@@ -224,7 +224,7 @@ export const FetchServicesOffers = async ({ user }: any) => {
                 city_id,
                 city (id, name, from_department (id, name))
             ),
-            user (name, last_name, phone, image_path)
+            user (name, last_name, description, phone, image_path)
         `)
         .eq('user', user);
 
@@ -249,7 +249,7 @@ export async function SearchedServices({searched}: any) {
             user,
             service (id, name),
             service_location (service_id, city_id),
-            user (name, last_name, phone, image_path)
+            user (name, last_name, description, phone, image_path)
           `)
         .eq('service', service.id)
         .eq('service_location.city_id', city.id)

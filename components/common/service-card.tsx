@@ -6,12 +6,13 @@ import { Edit, MessageCircle, Trash2, User } from "lucide-react-native";
 import { Alert, Image, Linking, Pressable, Text, View } from "react-native";
 import { Card } from "../ui/card";
 import { Heading } from "../ui/heading";
+import { ServiceCardText } from "./expandable-text";
 
 const { supabaseStorage } = Constants.expoConfig?.extra || {};
 
 export default function ServiceCard({ offer }: any) {
     const { title, description, image_path, id, user: userProfile } = offer;
-    const { profile, session } = useAuthStore();
+    const { profile } = useAuthStore();
     const { deleteService } = useServiceStore();
     const router = useRouter();
     const pathname = usePathname();
@@ -120,20 +121,26 @@ export default function ServiceCard({ offer }: any) {
                             <Text className="text-slate-700 font-semibold text-lg">
                                 {userProfile.name} {userProfile.last_name}
                             </Text>
-                            <Text className="text-slate-600 text-sm">
-                                {userProfile.description && userProfile.description !== 'hardcoded aaaa' 
-                                    ? userProfile.description 
-                                    : 'Proveedor del servicio'
-                                }
-                            </Text>
+                            <View className="mt-1">
+                                <ServiceCardText
+                                    text={userProfile.description 
+                                        ? userProfile.description 
+                                        : 'Proveedor del servicio'
+                                    }
+                                    variant="provider"
+                                />
+                            </View>
                         </View>
                     </View>
                 </View>
             )}
             
-            {/* Description */}
+            {/* Service Description */}
             <View className="mb-4">
-                <Text className="text-slate-600 text-base leading-6">{description}</Text>
+                <ServiceCardText
+                    text={description}
+                    variant="service"
+                />
             </View>
 
             {/* Service Image */}

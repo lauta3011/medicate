@@ -22,17 +22,21 @@ export default function User() {
                 <RoundedBackButton onPress={() => router.push('/')} />
             </View>
 
-            <ScrollView className="flex-grow" showsVerticalScrollIndicator={false}>
-                <EditablePhone />
 
-                <EditableDescription />
+            <ScrollView className="flex-grow" showsVerticalScrollIndicator={false}>
+                <View className="flex my-4">
+                    <View className="gap-4 mb-4">
+                        <EditablePhone />
+                        <EditableDescription />
+                    </View>
+                    <Button title="cerrar sesión" onPress={signOut} color="#94a3b8" />
+                </View>
 
                 <ServicesList user={profile.id} />
             </ScrollView>
             
             <View className="py-2 gap-2">
                 <Button title="agregar servicio" onPress={() => router.push('./user/new-service')}/>
-                <Button title="cerrar sesión" onPress={signOut} color="#ef4444"/>
             </View>
         </SafeAreaWrapper>  
     )

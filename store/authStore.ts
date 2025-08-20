@@ -68,13 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signUp: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-        const result = await Signup({userData});
-
-        if(result.error) {
-            set({ error: result.error.msg, isLoading: false });
-            return;
-        }
-
+        const result = await Signup({ userData });
         const { authData, profileData } = result;
 
         if (authData && authData.session) {
@@ -83,24 +77,35 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 profile: profileData?.[0] || profileData, // Handle array response
                 user: authData.user,
                 isLoading: false,
+                error: null,
             });
             router.push('/user');
         } else {
             set({ error: 'No se pudo crear la sesión', isLoading: false });
         }
     } catch (error) {
-        set({ error: error instanceof Error ? error.message : 'Error desconocido', isLoading: false });
+        console.log('Auth store signup error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido en el registro';
+        set({ error: errorMessage, isLoading: false });
+        throw error; // Re-throw for component-level handling
     }
   },
   signIn: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
        const { session, user }: any = await SigninService(email, password);
+       
+       if (!session || !user) {
+         throw new Error('No session or user data returned');
+       }
+       
       const profile = await fetchProfile(user.id);
-      set({ session, user, profile, isLoading: false });
+      set({ session, user, profile, isLoading: false, error: null });
       router.push('/user');  
     } catch (error: any) {
-      set({ error: error.message, isLoading: false });
+      console.log('Auth store signin error:', error);
+      const errorMessage = error?.message || 'Error desconocido en el inicio de sesión';
+      set({ error: errorMessage, isLoading: false });
       throw error; 
     }
   },

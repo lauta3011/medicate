@@ -1,4 +1,4 @@
-import { DeleteService, FetchServicesOffers, UpdateService } from "@/bff/service";
+import { DeleteService as DeleteServiceOffer, FetchServicesOffers, UpdateService as UpdateServiceOffer } from "@/bff/service";
 import { create } from "zustand";
 
 export const useServiceStore = create<any>((set, get) => ({
@@ -18,7 +18,7 @@ export const useServiceStore = create<any>((set, get) => ({
     deleteService: async (serviceId: any, user: any) => {
         set({ isLoading: true, error: null });
         try {
-            await DeleteService({ serviceId });
+            await DeleteServiceOffer({ serviceId });
             // Refresh the services list
             await get().getServices(user);
         } catch (error) {
@@ -29,7 +29,7 @@ export const useServiceStore = create<any>((set, get) => ({
     updateService: async (serviceData: any, user: any) => {
         set({ isLoading: true, error: null });
         try {
-            await UpdateService(serviceData);
+            await UpdateServiceOffer(serviceData);
             // Refresh the services list
             await get().getServices(user);
         } catch (error) {
