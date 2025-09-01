@@ -1,21 +1,21 @@
-import { View, ViewProps } from 'react-native';
 import React from 'react';
-import { centerStyle } from './styles';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import { View } from 'react-native';
 
-type ICenterProps = ViewProps & VariantProps<typeof centerStyle>;
+interface CenterProps extends React.ComponentProps<typeof View> {
+  className?: string;
+  children?: React.ReactNode;
+}
 
-const Center = React.forwardRef<React.ComponentRef<typeof View>, ICenterProps>(
-  function Center({ className, ...props }, ref) {
-    return (
-      <View
-        className={centerStyle({ class: className })}
-        {...props}
-        ref={ref}
-      />
-    );
-  }
-);
+function Center({ className, children, ...props }: CenterProps) {
+  return (
+    <View
+      className={`items-center justify-center ${className || ''}`}
+      {...props}
+    >
+      {children}
+    </View>
+  );
+}
 
 Center.displayName = 'Center';
 

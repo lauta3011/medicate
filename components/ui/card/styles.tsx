@@ -1,20 +1,22 @@
-import { tva } from '@gluestack-ui/nativewind-utils/tva';
-import { isWeb } from '@gluestack-ui/nativewind-utils/IsWeb';
-const baseStyle = isWeb ? 'flex flex-col relative z-0' : '';
+export const cardStyle = (props: any) => {
+  const baseStyles = 'rounded-lg';
+  
+  const sizeStyles = {
+    sm: 'p-3',
+    md: 'p-4', 
+    lg: 'p-6',
+  };
 
-export const cardStyle = tva({
-  base: baseStyle,
-  variants: {
-    size: {
-      sm: 'p-3 rounded',
-      md: 'p-4 rounded-md',
-      lg: 'p-6 rounded-xl',
-    },
-    variant: {
-      elevated: 'bg-background-0',
-      outline: 'border border-outline-200 ',
-      ghost: 'rounded-none',
-      filled: 'bg-background-50',
-    },
-  },
-});
+  const variantStyles = {
+    elevated: 'bg-white shadow-md shadow-black/10',
+    outline: 'bg-white border border-gray-200',
+    ghost: 'bg-transparent',
+    filled: 'bg-gray-50',
+  };
+
+  const size = props.size || 'md';
+  const variant = props.variant || 'elevated';
+  const className = props.class || '';
+
+  return `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`.trim();
+};

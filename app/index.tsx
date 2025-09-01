@@ -1,15 +1,18 @@
 import { fetchCities, fetchDepartment, fetchServices } from "@/bff/fetch";
+import SafeAreaWrapper from "@/components/common/safe-area-wrapper";
 import Selector from "@/components/common/selector";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
+import { useAuthStore } from "@/store/authStore";
 import { useSearchedStore } from "@/store/searchedStore";
 import { SelectedValue } from "@/types";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, SafeAreaView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function FilterView() {
     const { getSearchedServices } = useSearchedStore();
+    const { session } = useAuthStore();
     const [services, setServices] = useState<object[]>();
     const [departments, setDepartments] = useState<object[]>();
     const [cities, setCities] = useState<object[]>();
@@ -31,7 +34,7 @@ export default function FilterView() {
         async function updateCities() {
             const cities = await fetchCities(selectedDepartment!);
             setSelectedCity(null);
-            setCities(cities);
+            setCities(cities!);
         }
 
         if(!departments) {
@@ -47,11 +50,24 @@ export default function FilterView() {
         router.push('/searched');
     }
 
+    function handleOfferService() {
+        if (session) {
+            // User is logged in, redirect to user dashboard
+            router.push('/user');
+        } else {
+            // User is not logged in, redirect to login
+            router.push('/login');
+        }
+    }
+
     return (
-        <SafeAreaView className="flex-1 justify-between">
-            <Center>
-                <Heading size="5xl" className="text-slate-50 mb-16">Bienvenido a <Text className="text-slate-300">Conectate</Text></Heading>
-            </Center>
+        <SafeAreaWrapper className="flex-1 justify-between px-6">
+            {/* Header */}
+            <View className="mt-16 mb-8">
+                <Heading size="6xl" className="text-slate-50 mb-2">
+                    Bienvenido a <Text className="text-slate-300">Conectate</Text>
+                </Heading>
+            </View>
 
             <View className="my-10 gap-3">
                 <Text className="font-light text-3xl text-slate-50">{"¿que servicio estas buscando?"}</Text>
@@ -76,10 +92,10 @@ export default function FilterView() {
                         <Text className="font-light text-3xl text-center text-slate-600">buscar</Text>
                     </Pressable>
                 }
-                <Pressable onPress={() => router.push('./login')}>
+                <Pressable onPress={handleOfferService}>
                     <Text className="font-light text-3xl text-slate-50">ofrecer servicio</Text>
                 </Pressable>
             </Center>
-        </SafeAreaView>
+        </SafeAreaWrapper>
     )
 }

@@ -1,267 +1,281 @@
 'use client';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { tva } from '@gluestack-ui/nativewind-utils/tva';
-import {
-  useStyleContext,
-  withStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext';
-import { createSelect } from '@gluestack-ui/select';
-import { cssInterop } from 'nativewind';
-import React from 'react';
-import { Pressable, TextInput, View } from 'react-native';
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-  ActionsheetFlatList,
-  ActionsheetItem,
-  ActionsheetItemText,
-  ActionsheetScrollView,
-  ActionsheetSectionHeaderText,
-  ActionsheetSectionList,
-  ActionsheetVirtualizedList,
-} from './select-actionsheet';
+type SelectSize = 'sm' | 'md' | 'lg' | 'xl';
+type SelectVariant = 'outline' | 'underlined' | 'rounded';
 
-const SelectTriggerWrapper = React.forwardRef<
-  React.ComponentRef<typeof Pressable>,
-  React.ComponentProps<typeof Pressable>
->(function SelectTriggerWrapper({ ...props }, ref) {
-  return <Pressable {...props} ref={ref} />;
-});
+interface SelectProps extends React.ComponentProps<typeof View> {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  defaultValue?: string;
+  initialLabel?: string;
+  selectedValue?: string;
+  placeholder: string;
+  closeOnOverlayClick?: boolean;
+  children?: React.ReactNode;
+}
 
-const selectIconStyle = tva({
-  base: 'text-background-500 fill-none',
-  parentVariants: {
-    size: {
-      '2xs': 'h-3 w-3',
-      'xs': 'h-3.5 w-3.5',
-      'sm': 'h-4 w-4',
-      'md': 'h-[18px] w-[18px]',
-      'lg': 'h-5 w-5',
-      'xl': 'h-6 w-6',
-    },
-  },
-});
+interface SelectTriggerProps extends React.ComponentProps<typeof Pressable> {
+  variant?: SelectVariant;
+  size?: SelectSize;
+  children?: React.ReactNode;
+}
 
-const selectStyle = tva({
-  base: '',
-});
+interface SelectInputProps {}
 
-const selectTriggerStyle = tva({
-  base: 'border border-background-300 rounded flex-row items-center overflow-hidden data-[hover=true]:border-outline-400 data-[focus=true]:border-primary-700 data-[disabled=true]:opacity-40 data-[disabled=true]:data-[hover=true]:border-background-300',
-  variants: {
-    size: {
-      xl: 'h-12',
-      lg: 'h-11',
-      md: 'h-10',
-      sm: 'h-9',
-    },
-    variant: {
-      underlined:
-        'border-0 border-b rounded-none data-[hover=true]:border-primary-700 data-[focus=true]:border-primary-700 data-[focus=true]:web:shadow-[inset_0_-1px_0_0] data-[focus=true]:web:shadow-primary-700 data-[invalid=true]:border-error-700 data-[invalid=true]:web:shadow-error-700',
-      outline:
-        'data-[focus=true]:border-primary-700 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:data-[hover=true]:web:shadow-primary-600 data-[invalid=true]:web:shadow-[inset_0_0_0_1px] data-[invalid=true]:border-error-700 data-[invalid=true]:web:shadow-error-700 data-[invalid=true]:data-[hover=true]:border-error-700',
-      rounded:
-        'rounded-full data-[focus=true]:border-primary-700 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:web:shadow-primary-700 data-[invalid=true]:border-error-700 data-[invalid=true]:web:shadow-error-700',
-    },
-  },
-});
+interface SelectIconProps extends React.ComponentProps<typeof View> {
+  as?: React.ElementType;
+  children?: React.ReactNode;
+}
 
-const selectInputStyle = tva({
-  base: 'py-auto px-3 placeholder:text-slate-50 web:w-full h-full text-typography-900 pointer-events-none web:outline-none ios:leading-[0px]',
-  parentVariants: {
-    size: {
-      xl: 'text-xl',
-      lg: 'text-lg',
-      md: 'text-base',
-      sm: 'text-sm',
-    },
-    variant: {
-      underlined: 'px-0',
-      outline: '',
-      rounded: 'px-4',
-    },
-  },
-});
+interface SelectItemProps extends React.ComponentProps<typeof Pressable> {
+  label?: string;
+  value?: string;
+  children?: React.ReactNode;
+}
 
-const UISelect = createSelect(
-  {
-    Root: View,
-    Trigger: withStyleContext(SelectTriggerWrapper),
-    Input: TextInput,
-    Icon: UIIcon,
-  },
-  {
-    Portal: Actionsheet,
-    Backdrop: ActionsheetBackdrop,
-    Content: ActionsheetContent,
-    DragIndicator: ActionsheetDragIndicator,
-    DragIndicatorWrapper: ActionsheetDragIndicatorWrapper,
-    Item: ActionsheetItem,
-    ItemText: ActionsheetItemText,
-    ScrollView: ActionsheetScrollView,
-    VirtualizedList: ActionsheetVirtualizedList,
-    FlatList: ActionsheetFlatList,
-    SectionList: ActionsheetSectionList,
-    SectionHeaderText: ActionsheetSectionHeaderText,
+interface SelectPortalProps extends React.ComponentProps<typeof Modal> {
+  children?: React.ReactNode;
+}
+
+interface SelectBackdropProps extends React.ComponentProps<typeof Pressable> {}
+
+interface SelectContentProps extends React.ComponentProps<typeof View> {
+  children?: React.ReactNode;
+}
+
+interface SelectContextType {
+  isOpen: boolean;
+  placeholder: string;
+  setIsOpen: (isOpen: boolean) => void;
+  selectedValue: string;
+  selectedLabel: string;
+  onValueChange?: (value: string, label?: string) => void;
+}
+
+const SelectContext = React.createContext<SelectContextType | null>(null);
+
+// Custom hook to safely access SelectContext
+const useSelectContext = () => {
+  const context = React.useContext(SelectContext);
+  if (!context) {
+    throw new Error('useSelectContext must be used within a Select component');
   }
-);
+  return context;
+};
 
-cssInterop(UISelect, { className: 'style' });
-cssInterop(UISelect.Input, {
-  className: { target: 'style', nativeStyleToProp: { textAlign: true } },
-});
-cssInterop(SelectTriggerWrapper, { className: 'style' });
+const getSelectTriggerStyles = (variant: SelectVariant, size: SelectSize): string => {
+  const baseStyles = 'flex-row items-center border bg-transparent';
+  
+  const sizeStyles = {
+    sm: 'h-8 px-2 text-sm',
+    md: 'h-10 px-3 text-base',
+    lg: 'h-12 px-4 text-lg',
+    xl: 'h-16 px-5 text-3xl',
+  };
 
-cssInterop(PrimitiveIcon, {
-  className: {
-    target: 'style',
-    nativeStyleToProp: {
-      height: true,
-      width: true,
-      fill: true,
-      color: 'classNameColor',
-      stroke: true,
-    },
-  },
-});
+  const variantStyles = {
+    outline: 'border-slate-200 rounded-md',
+    underlined: 'rounded-none border-b border-slate-200 border-t-0 border-l-0 border-r-0',
+    rounded: 'rounded-full border-slate-200',
+  };
 
-type ISelectProps = VariantProps<typeof selectStyle> &
-  React.ComponentProps<typeof UISelect> & { className?: string };
+  return `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]}`.trim();
+};
 
-const Select = React.forwardRef<
-  React.ComponentRef<typeof UISelect>,
-  ISelectProps
->(function Select({ className, ...props }, ref) {
+function Select({ 
+  value, 
+  onValueChange, 
+  defaultValue, 
+  selectedValue, 
+  initialLabel,
+  placeholder,
+  children, 
+  ...props 
+}: SelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentValue, setCurrentValue] = useState(selectedValue || defaultValue || '');
+  const [currentLabel, setCurrentLabel] = useState(initialLabel || selectedValue || defaultValue || '');
+
+  const handleValueChange = (newValue: string, newLabel?: string) => {
+    setCurrentValue(newValue);
+    setCurrentLabel(newLabel || newValue);
+    onValueChange?.(newValue);
+    setIsOpen(false);
+  };
+
+  // Update internal state when external selectedValue changes
+  useEffect(() => {
+    if (selectedValue !== undefined) {
+      setCurrentValue(selectedValue);
+      setCurrentLabel(selectedValue);
+    }
+  }, [selectedValue]);
+
   return (
-    <UISelect
-      className={selectStyle({
-        class: className,
-      })}
-      ref={ref}
-      {...props}
-    />
+    <SelectContext.Provider value={{ 
+      isOpen, 
+      setIsOpen, 
+      selectedValue: currentValue,
+      selectedLabel: currentLabel,
+      placeholder,
+      onValueChange: handleValueChange 
+    }}>
+      <View className="w-full" {...props}>
+        {children}
+      </View>
+    </SelectContext.Provider>
   );
-});
+}
 
-type ISelectTriggerProps = VariantProps<typeof selectTriggerStyle> &
-  React.ComponentProps<typeof UISelect.Trigger> & { className?: string };
+function SelectTrigger({ 
+  variant = 'outline', 
+  size = 'md', 
+  children, 
+  ...props 
+}: SelectTriggerProps) {
+  const { setIsOpen } = useSelectContext();
 
-const SelectTrigger = React.forwardRef<
-  React.ComponentRef<typeof UISelect.Trigger>,
-  ISelectTriggerProps
->(function SelectTrigger(
-  { className, size = 'md', variant = 'outline', ...props },
-  ref
-) {
+  const handlePress = () => {
+    try {
+      if (setIsOpen && typeof setIsOpen === 'function') {
+        setIsOpen(true);
+      }
+    } catch (error) {
+      console.warn('Error in SelectTrigger handlePress:', error);
+    }
+  };
+
   return (
-    <UISelect.Trigger
-      className={selectTriggerStyle({
-        class: className,
-        size,
-        variant,
-      })}
-      ref={ref}
-      context={{ size, variant }}
+    <Pressable
+      className={`${getSelectTriggerStyles(variant, size)} justify-between px-3`}
+      onPress={handlePress}
       {...props}
-    />
+    >
+      {children}
+    </Pressable>
   );
-});
+}
 
-type ISelectInputProps = VariantProps<typeof selectInputStyle> &
-  React.ComponentProps<typeof UISelect.Input> & { className?: string };
+function SelectInput() {
+  const { selectedLabel, placeholder } = useSelectContext();
 
-const SelectInput = React.forwardRef<
-  React.ComponentRef<typeof UISelect.Input>,
-  ISelectInputProps
->(function SelectInput({ className, ...props }, ref) {
-  const { size: parentSize, variant: parentVariant } = useStyleContext();
   return (
-    <UISelect.Input
-      className={selectInputStyle({
-        class: className,
-        parentVariants: {
-          size: parentSize,
-          variant: parentVariant,
-        },
-      })}
-      ref={ref}
-      {...props}
-    />
+    <View className="flex-1 h-full">
+      <Text className='text-slate-50 text-2xl mt-3 font-light'>
+        {String(selectedLabel || placeholder)}
+      </Text>
+    </View>
   );
-});
+}
 
-type ISelectIcon = VariantProps<typeof selectIconStyle> &
-  React.ComponentProps<typeof UISelect.Icon> & { className?: string };
-
-const SelectIcon = React.forwardRef<
-  React.ComponentRef<typeof UISelect.Icon>,
-  ISelectIcon
->(function SelectIcon({ className, size, ...props }, ref) {
-  const { size: parentSize } = useStyleContext();
-  if (typeof size === 'number') {
+function SelectIcon({ as: IconComponent, children, ...props }: SelectIconProps) {
+  if (IconComponent) {
     return (
-      <UISelect.Icon
-        ref={ref}
-        {...props}
-        className={selectIconStyle({ class: className })}
-        size={size}
-      />
-    );
-  } else if (
-    //@ts-expect-error : web only
-    (props?.height !== undefined || props?.width !== undefined) &&
-    size === undefined
-  ) {
-    return (
-      <UISelect.Icon
-        ref={ref}
-        {...props}
-        className={selectIconStyle({ class: className })}
-      />
+      <View className="justify-center items-center" {...props}>
+        <IconComponent color="#f1f5f9" size={24} />
+      </View>
     );
   }
+
   return (
-    <UISelect.Icon
-      className={selectIconStyle({
-        class: className,
-        size,
-        parentVariants: {
-          size: parentSize,
-        },
-      })}
-      ref={ref}
+    <View className="justify-center items-center" {...props}>
+      {children}
+    </View>
+  );
+}
+
+function SelectPortal({ children, ...props }: SelectPortalProps) {
+  const { isOpen, setIsOpen } = useSelectContext();
+
+  return (
+    <Modal
+      visible={isOpen}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={() => setIsOpen(false)}
+      {...props}
+    >
+      <View className="flex-1 justify-end bg-black/50">
+        {children}
+      </View>
+    </Modal>
+  );
+}
+
+function SelectBackdrop({ ...props }: SelectBackdropProps) {
+  const { setIsOpen } = useSelectContext();
+
+  return (
+    <Pressable
+      className="absolute inset-0"
+      onPress={() => setIsOpen(false)}
       {...props}
     />
   );
-});
+}
 
-Select.displayName = 'Select';
-SelectTrigger.displayName = 'SelectTrigger';
-SelectInput.displayName = 'SelectInput';
-SelectIcon.displayName = 'SelectIcon';
+function SelectContent({ children, ...props }: SelectContentProps) {
+  return (
+    <ScrollView
+      className="bg-white rounded-t-2xl max-h-80"
+      {...props}
+    >
+      {children}
+    </ScrollView>
+  );
+}
 
-// Actionsheet Components
-const SelectPortal = UISelect.Portal;
-const SelectBackdrop = UISelect.Backdrop;
-const SelectContent = UISelect.Content;
-const SelectDragIndicator = UISelect.DragIndicator;
-const SelectDragIndicatorWrapper = UISelect.DragIndicatorWrapper;
-const SelectItem = UISelect.Item;
-const SelectScrollView = UISelect.ScrollView;
-const SelectVirtualizedList = UISelect.VirtualizedList;
-const SelectFlatList = UISelect.FlatList;
-const SelectSectionList = UISelect.SectionList;
-const SelectSectionHeaderText = UISelect.SectionHeaderText;
+function SelectItem({ label, value, children, ...props }: SelectItemProps) {
+  const { onValueChange } = useSelectContext();
 
+  const handlePress = () => {
+    try {
+      const itemValue = value || label || '';
+      const itemLabel = label || value || '';
+      if (onValueChange && typeof onValueChange === 'function') {
+        onValueChange(itemValue, itemLabel);
+      }
+    } catch (error) {
+      console.warn('Error in SelectItem handlePress:', error);
+    }
+  };
+
+  return (
+    <Pressable
+      className="py-4 px-4 border-b border-gray-100 active:bg-gray-50"
+      onPress={handlePress}
+      {...props}
+    >
+      <Text className="text-gray-900 text-xl font-light">
+        {String(children || label || value || '')}
+      </Text>
+    </Pressable>
+  );
+}
+
+// Placeholder components for compatibility
+function SelectDragIndicator() {
+  return <View className="w-12 h-1 bg-gray-300 rounded-full mx-auto my-2" />;
+}
+
+function SelectDragIndicatorWrapper({ children }: { children?: React.ReactNode }) {
+  return (
+    <View className="py-2">
+      {children}
+    </View>
+  );
+}
+
+const SelectScrollView = ScrollView;
+const SelectFlatList = FlatList;
+
+// Export components
 export {
   Select, SelectBackdrop,
   SelectContent,
   SelectDragIndicator,
-  SelectDragIndicatorWrapper, SelectFlatList, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectSectionHeaderText, SelectSectionList, SelectTrigger, SelectVirtualizedList
+  SelectDragIndicatorWrapper, SelectFlatList, SelectIcon, SelectInput, SelectItem,
+  SelectPortal, SelectScrollView, SelectTrigger
 };
-
