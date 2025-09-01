@@ -1,200 +1,42 @@
-import React, { forwardRef, memo } from 'react';
-import { headingStyle } from './styles';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-type IHeadingProps = VariantProps<typeof headingStyle> &
-  React.ComponentPropsWithoutRef<'h1'> & {
-    as?: React.ElementType;
-  };
+import React from 'react';
+import { Text } from 'react-native';
 
-const MappedHeading = memo(
-  forwardRef<HTMLHeadingElement, IHeadingProps>(function MappedHeading(
-    {
-      size,
-      className,
-      isTruncated,
-      bold,
-      underline,
-      strikeThrough,
-      sub,
-      italic,
-      highlight,
-      ...props
-    },
-    ref
-  ) {
-    switch (size) {
-      case '5xl':
-      case '4xl':
-      case '3xl':
-        return (
-          <h1
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      case '2xl':
-        return (
-          <h2
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      case 'xl':
-        return (
-          <h3
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      case 'lg':
-        return (
-          <h4
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      case 'md':
-        return (
-          <h5
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      case 'sm':
-      case 'xs':
-        return (
-          <h6
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-      default:
-        return (
-          <h4
-            className={headingStyle({
-              size,
-              isTruncated,
-              bold,
-              underline,
-              strikeThrough,
-              sub,
-              italic,
-              highlight,
-              class: className,
-            })}
-            {...props}
-            ref={ref}
-          />
-        );
-    }
-  })
-);
+type HeadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
 
-const Heading = memo(
-  forwardRef<HTMLHeadingElement, IHeadingProps>(function Heading(
-    { className, size = 'lg', as: AsComp, ...props },
-    ref
-  ) {
-    const {
-      isTruncated,
-      bold,
-      underline,
-      strikeThrough,
-      sub,
-      italic,
-      highlight,
-    } = props;
+interface HeadingProps extends React.ComponentProps<typeof Text> {
+  className?: string;
+  size?: HeadingSize;
+  children?: React.ReactNode;
+}
 
-    if (AsComp) {
-      return (
-        <AsComp
-          className={headingStyle({
-            size,
-            isTruncated,
-            bold,
-            underline,
-            strikeThrough,
-            sub,
-            italic,
-            highlight,
-            class: className,
-          })}
-          {...props}
-          ref={ref}
-        />
-      );
-    }
+const Heading = React.forwardRef<React.ComponentRef<typeof Text>, HeadingProps>(
+  function Heading({ className, size = 'lg', children, ...props }, ref) {
+    const sizeStyles = {
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl',
+      '2xl': 'text-2xl',
+      '3xl': 'text-3xl',
+      '4xl': 'text-4xl',
+      '5xl': 'text-5xl',
+      '6xl': 'text-6xl',
+    };
+
+    const baseStyles = 'font-bold text-gray-900';
+    const sizeClass = sizeStyles[size];
 
     return (
-      <MappedHeading className={className} size={size} ref={ref} {...props} />
+      <Text
+        ref={ref}
+        className={`${baseStyles} ${sizeClass} ${className || ''}`}
+        {...props}
+      >
+        {children}
+      </Text>
     );
-  })
+  }
 );
 
 Heading.displayName = 'Heading';

@@ -34,7 +34,7 @@ export default function FilterView() {
         async function updateCities() {
             const cities = await fetchCities(selectedDepartment!);
             setSelectedCity(null);
-            setCities(cities);
+            setCities(cities!);
         }
 
         if(!departments) {
@@ -64,7 +64,7 @@ export default function FilterView() {
         <SafeAreaWrapper className="flex-1 justify-between px-6">
             {/* Header */}
             <View className="mt-16 mb-8">
-                <Heading size="5xl" className="text-slate-50 mb-2">
+                <Heading size="6xl" className="text-slate-50 mb-2">
                     Bienvenido a <Text className="text-slate-300">Conectate</Text>
                 </Heading>
             </View>

@@ -11,7 +11,11 @@
         "resourceClass": "m-medium"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "gradleCommand": ":app:assembleDebug",
+        "env": {
+          "EXPO_USE_GRADLE_9": "1"
+        }
       }
     },
     "preview": {
@@ -20,7 +24,11 @@
         "resourceClass": "m-medium"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "EXPO_USE_GRADLE_9": "1"
+        }
       }
     },
     "production": {
@@ -29,7 +37,11 @@
         "resourceClass": "m-medium"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "EXPO_USE_GRADLE_9": "1"
+        }
       }
     }
   },

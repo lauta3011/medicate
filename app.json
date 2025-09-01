@@ -10,7 +10,6 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "statusBarHidden": true,
       "bundleIdentifier": "com.lauta3011.medicate",
       "buildNumber": "1"
     },
@@ -20,11 +19,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lauta3011.medicate",
-      "versionCode": 1,
-      "statusBarHidden": true,
-      "edgeToEdgeEnabled": true,
-      "navigationBarColor": "transparent",
-      "navigationBarHidden": true
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
@@ -42,15 +37,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "La aplicación necesita acceso a tus fotos.",
-          "cameraPermission": "La aplicación necesita acceso a tu cámara."
-        }
-      ],
-      "expo-secure-store",
-      "expo-sqlite"
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

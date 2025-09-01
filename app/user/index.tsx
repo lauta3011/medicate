@@ -16,7 +16,7 @@ export default function User() {
         <SafeAreaWrapper className="flex-1 px-6">
             {/* Header */}
             <View className="flex-row items-center justify-between mt-16 mb-8">
-                <Heading size="5xl" className="text-slate-50 mb-2">
+                <Heading size="6xl" className="text-slate-50 mb-2">
                     {profile.name} <Text className="text-slate-300">{profile.last_name}</Text>
                 </Heading>
                 <RoundedBackButton onPress={() => router.push('/')} />
