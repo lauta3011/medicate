@@ -44,13 +44,13 @@ interface ModalCloseButtonProps extends React.ComponentProps<typeof Pressable> {
 }
 
 const getModalContentStyles = (size: ModalSize) => {
-  const baseStyles = 'bg-white rounded-lg overflow-hidden border border-gray-200 shadow-lg p-6';
+  const baseStyles = 'bg-white rounded-lg overflow-hidden border border-gray-200 shadow-lg p-3';
   
   const sizeStyles = {
     xs: 'w-[60%] max-w-[360px]',
     sm: 'w-[70%] max-w-[420px]',
     md: 'w-[80%] max-w-[520px]',
-    lg: 'w-[90%] max-w-[720px]',
+    lg: 'w-[90%] max-w-[720px] h-[60%]',
     full: 'w-full h-full max-w-none rounded-none',
   };
 
@@ -73,7 +73,7 @@ function Modal({ className, size = 'md', isOpen, children, ...props }: ModalProp
 function ModalBackdrop({ className, onPress, ...props }: ModalBackdropProps) {
   return (
     <Pressable
-      className={`absolute inset-0 bg-black/50 ${className || ''}`}
+      className={`absolute inset-0 h-full bg-black/50 w-full ${className || ''}`}
       onPress={onPress}
       {...props}
     />

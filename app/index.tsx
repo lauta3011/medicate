@@ -32,9 +32,11 @@ export default function FilterView() {
         }
         
         async function updateCities() {
-            const cities = await fetchCities(selectedDepartment!);
-            setSelectedCity(null);
-            setCities(cities!);
+            if (selectedDepartment) {
+                const cities = await fetchCities(selectedDepartment);
+                setSelectedCity(null);
+                setCities(cities!);
+            }
         }
 
         if(!departments) {
@@ -42,7 +44,9 @@ export default function FilterView() {
             return;
         }
 
-        updateCities();
+        if (selectedDepartment) {
+            updateCities();
+        }
     }, [selectedDepartment])  
 
     function updateSearchedServices () {
@@ -79,12 +83,10 @@ export default function FilterView() {
                 <Selector list={departments} onChange={(dpt: SelectedValue) => setSelectedDepartment(dpt)} value={selectedDepartment} placeholder="en el departamento de..." />
             </View>
 
-            {selectedDepartment &&
-                <View className="my-10 gap-3">
-                    <Text className="font-light text-3xl text-slate-50">{"ciudad de..."}</Text>
-                    <Selector placeholder="..." onChange={(city: SelectedValue) => setSelectedCity(city)} value={selectedCity} list={cities} />
-                </View> 
-            }
+            <View className="my-10 gap-3">
+                <Text className="font-light text-3xl text-slate-50">{"ciudad de..."}</Text>
+                <Selector placeholder="..." onChange={(city: SelectedValue) => setSelectedCity(city)} value={selectedCity} list={cities} />
+            </View>
 
             <Center className="gap-16 flex-1">
                 {selectedCity && selectedDepartment && selectedService && 

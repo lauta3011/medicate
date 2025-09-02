@@ -13,21 +13,21 @@ import {
     SelectTrigger,
 } from "../ui/select";
 
-export default function Selector({ value, textColor, placeholder, list, onChange }: any) {
+export default function Selector({ value, isDisabled, placeholder, list, onChange }: any) {
     // Extract the display value properly
     const displayValue = value?.name || placeholder;
     const selectedValue = value?.name || '';
     
     return (
-        <View className="w-full">
+        <View className={"w-full ${isDisabled ? opacity-50 : opacity-100}"}>
             <Select placeholder={placeholder} defaultValue={displayValue} initialLabel={displayValue} selectedValue={selectedValue} closeOnOverlayClick={true} onValueChange={(itemValue) => {
                 const selected = list.find((item: any) => item.name === itemValue);
                 onChange(selected);
             }}>
-                <SelectTrigger variant="outline" size="xl">
+                {!isDisabled && <SelectTrigger size="xl">
                     <SelectInput />
                     <SelectIcon as={ChevronDownIcon} />
-                </SelectTrigger>
+                </SelectTrigger>}
                 <SelectPortal>
                     <SelectBackdrop />
                     <SelectContent>

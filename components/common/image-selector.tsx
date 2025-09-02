@@ -1,8 +1,8 @@
 import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
 import {
-    BookImage,
-    Camera
+  BookImage,
+  Camera
 } from "lucide-react-native";
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, Pressable, Text, View } from 'react-native';
@@ -72,16 +72,13 @@ export default function ImageSelector({ prevImage, handleImageChanged }: any) {
     }
   };
 
-  console.log('prev ', prevImage)
-  console.log('image ', image)
-
   return (
     <View>
       {(image || prevImage) && (
         <Image source={{ uri: prevImage ?? image }} className="w-[200] h-[200] my-7 rounded-xl" />
       )}
       <View className="w-full flex-row justify-evenly">
-        <Pressable 
+                <Pressable 
           className={`border rounded-lg p-4 flex-row items-center ${
             isExpoGo ? 'border-slate-400 opacity-50' : 'border-slate-100'
           }`} 

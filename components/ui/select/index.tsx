@@ -116,7 +116,7 @@ function Select({
   return (
     <SelectContext.Provider value={{ 
       isOpen, 
-      setIsOpen, 
+      setIsOpen,
       selectedValue: currentValue,
       selectedLabel: currentLabel,
       placeholder,

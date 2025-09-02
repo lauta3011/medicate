@@ -26,6 +26,7 @@ export default function ServiceCard({ offer }: any) {
     // Show WhatsApp button only when NOT on user dashboard (i.e., search results or other views)
     const showWhatsApp = !isUserDashboard;
     
+    console.log('$$$ ', showWhatsApp)
     const handleEdit = () => {
         router.push(`/user/edit-service?serviceId=${id}`);
     };
